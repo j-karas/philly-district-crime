@@ -5,9 +5,9 @@
         <title>Philly District Crime</title>
 
         <!-- import D3 Version 6 here or at the end of the body -->
-        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
-        <script src="https://unpkg.com/topojson@3"></script> -->
-        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
+        <!-- <script src="https://unpkg.com/topojson@3"></script> -->
+        <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
         <script src="http://d3js.org/topojson.v0.min.js"></script>
         
         <!-- load our custom D3 code (must happen after D3 is loaded) -->
@@ -43,15 +43,25 @@
             var width = 800,
                 height = 700;
 
-            var projection = d3.geo.mercator()
+            Promise.all([
+                d3.json("./Boundaries_District.json"),
+                d3.csv("./incidents_part1_part2.csv")
+            ]).then((data) =>{
+                console.log(data);
+                const topology = data[0];
+                const crime = data[1];
+                console.log(topology);
+
+
+            var projection = d3.geoMercator()
                 .center([-75.12, 40.05])
                 .scale(100000);
 
-            var path = d3.geo.path()
+            var path = d3.geoPath()
                 .projection(projection);
 
-            var path2 = d3.geo.path()
-                .projection(projection);
+            // var path2 = d3.geo.path()
+            //     .projection(projection);
 
             var svg = d3.select("body").append("svg")
                 .attr("width", width)
@@ -64,6 +74,46 @@
             var districtText = svg.append("text")
                 .attr("y", height / 10)
                 .attr("text-anchor", "left");
+                
+            svg.selectAll("path")
+                .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
+                .enter().append("path")
+                .attr("class", "districts")
+                .attr("id", function (d) {return d.properties.DIST_NUM;})
+                .attr("d", path)
+                .on("mouseover", function () {
+                    d3.select(this).style("stroke", "red");
+                    // d3.select(this).style("fill", "white");
+                    d3.select(this).style("stroke-width", "2px");
+                    districtText.text("District: " + this.id);
+                })
+                .on("mouseout", function () {
+                    d3.select(this).style("stroke", "black");
+                    d3.select(this).style("fill", "#aaa");
+                    d3.select(this).style("stroke-width", ".75px");
+                    districtText.text("");
+                })
+
+                svg.append("g")
+                    .selectAll("circle")
+                    .data(crime)
+                    .join("circle")
+                    .attr("d", path)
+                    .attr("fill", "red")
+                    .attr("stroke", (d) => {
+                        var color;
+                        if (d.ucr_general === 600) {
+                            color = "red";
+                        } else {
+                            color = "green";
+                        }
+
+                        return color;
+                    })
+                    .attr("r", "2px")
+                    .attr("cx", (d) => { return projection([d.lng, d.lat])[0] })
+                    .attr("cy", (d) => { return projection([d.lng, d.lat])[1] });
+
 
             // d3.json("philadelphia.json", function (error, topology) {
             //     svg.selectAll("path")
@@ -82,26 +132,28 @@
             //         });
             // });
 
-            d3.json("Boundaries_District.json", function (error, topology){
-                svg.selectAll("path")
-                    .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
-                    .enter().append("path")
-                    .attr("class", "districts")
-                    .attr("id", function (d) {return d.properties.DIST_NUM;})
-                    .attr("d", path)
-                    .on("mouseover", function () {
-                        d3.select(this).style("stroke", "red");
-                        // d3.select(this).style("fill", "white");
-                        d3.select(this).style("stroke-width", "2px");
-                        districtText.text("District: " + this.id);
-                    })
-                    .on("mouseout", function () {
-                        d3.select(this).style("stroke", "black");
-                        d3.select(this).style("fill", "#aaa");
-                        d3.select(this).style("stroke-width", ".75px");
-                        districtText.text("");
-                    })
-            });
+            // d3.json("Boundaries_District.json", function (error, topology){
+            //     svg.selectAll("path")
+            //         .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
+            //         .enter().append("path")
+            //         .attr("class", "districts")
+            //         .attr("id", function (d) {return d.properties.DIST_NUM;})
+            //         .attr("d", path)
+            //         .on("mouseover", function () {
+            //             d3.select(this).style("stroke", "red");
+            //             // d3.select(this).style("fill", "white");
+            //             d3.select(this).style("stroke-width", "2px");
+            //             districtText.text("District: " + this.id);
+            //         })
+            //         .on("mouseout", function () {
+            //             d3.select(this).style("stroke", "black");
+            //             d3.select(this).style("fill", "#aaa");
+            //             d3.select(this).style("stroke-width", ".75px");
+            //             districtText.text("");
+            //         })
+            // });
+
+        }) 
         </script>
     </body>
 </html>
