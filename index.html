@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+    <head> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>Philly District Crime</title>
+
+        <!-- import D3 Version 6 here or at the end of the body -->
+        <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/6.7.0/d3.min.js"></script>
+        <script src="https://unpkg.com/topojson@3"></script> -->
+        <script src="http://d3js.org/d3.v3.min.js"></script>
+        <script src="http://d3js.org/topojson.v0.min.js"></script>
+        
+        <!-- load our custom D3 code (must happen after D3 is loaded) -->
+        <!-- <script src="./geomap.js"></script> -->
+        <style>
+            path {
+                fill: #aaa;
+                stroke: #fff;
+                stroke-width: .75px;
+                pointer-events: all;
+            }
+
+            path {
+                stroke: black;
+                stroke-width: .75px;
+                pointer-events: all;
+            }
+        
+            text {
+                font-family: sans-serif;
+                font-size: 25px;
+                color: #aaa;
+            }
+        </style>
+
+    </head>
+    <body>
+        <!-- create an SVG canvas for us to modify -->
+        <!-- <svg id="geomap" width="1200" height="800"></svg> -->
+
+        <script>
+
+            var width = 800,
+                height = 700;
+
+            var projection = d3.geo.mercator()
+                .center([-75.12, 40.05])
+                .scale(100000);
+
+            var path = d3.geo.path()
+                .projection(projection);
+
+            var path2 = d3.geo.path()
+                .projection(projection);
+
+            var svg = d3.select("body").append("svg")
+                .attr("width", width)
+                .attr("height", height);
+
+            var neighborhoodText = svg.append("text")
+                .attr("y", height / 8)
+                .attr("text-anchor", "left");
+
+            var districtText = svg.append("text")
+                .attr("y", height / 10)
+                .attr("text-anchor", "left");
+
+            // d3.json("philadelphia.json", function (error, topology) {
+            //     svg.selectAll("path")
+            //         .data(topojson.object(topology, topology.objects.philadelphia).geometries)
+            //         .enter().append("path")
+            //         .attr("class", "neighborhoods")
+            //         .attr("id", function (d) { return d.properties.name; })
+            //         .attr("d", path)
+            //         .on("mouseover", function () {
+            //             d3.select(this).style("fill", "#ff0");
+            //             neighborhoodText.text("Neighborhood: " + this.id);
+            //         })
+            //         .on("mouseout", function () {
+            //             d3.select(this).style("fill", "#aaa");
+            //             neighborhoodText.text("");
+            //         });
+            // });
+
+            d3.json("Boundaries_District.json", function (error, topology){
+                svg.selectAll("path")
+                    .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
+                    .enter().append("path")
+                    .attr("class", "districts")
+                    .attr("id", function (d) {return d.properties.DIST_NUM;})
+                    .attr("d", path)
+                    .on("mouseover", function () {
+                        d3.select(this).style("stroke", "red");
+                        // d3.select(this).style("fill", "white");
+                        d3.select(this).style("stroke-width", "2px");
+                        districtText.text("District: " + this.id);
+                    })
+                    .on("mouseout", function () {
+                        d3.select(this).style("stroke", "black");
+                        d3.select(this).style("fill", "#aaa");
+                        d3.select(this).style("stroke-width", ".75px");
+                        districtText.text("");
+                    })
+            });
+        </script>
+    </body>
+</html>
