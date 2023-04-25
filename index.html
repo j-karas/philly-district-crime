@@ -9,6 +9,8 @@
         <!-- <script src="https://unpkg.com/topojson@3"></script> -->
         <!-- <script src="http://d3js.org/d3.v3.min.js"></script> -->
         <script src="http://d3js.org/topojson.v0.min.js"></script>
+        <script src="./geomap.js"></script>
+        <script src="./bargraphs.js"></script>        
         
         <!-- load our custom D3 code (must happen after D3 is loaded) -->
         <!-- <script src="./geomap.js"></script> -->
@@ -31,129 +33,85 @@
                 font-size: 25px;
                 color: #aaa;
             }
+
+            /* Dropdown Button */
+            .dropbtn {
+            background-color: #3498DB;
+            color: white;
+            padding: 16px;
+            font-size: 16px;
+            border: none;
+            cursor: pointer;
+            }
+
+            /* Dropdown button on hover & focus */
+            .dropbtn:hover, .dropbtn:focus {
+            background-color: #2980B9;
+            }
+
+            /* The container <div> - needed to position the dropdown content */
+            .dropdown {
+            position: relative;
+            display: inline-block;
+            }
+
+            /* Dropdown Content (Hidden by Default) */
+            .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #f1f1f1;
+            min-width: 160px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1;
+            }
+
+            /* Links inside the dropdown */
+            .dropdown-content a {
+            color: black;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            }
+
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {background-color: #ddd;}
+
+            /* Show the dropdown menu (use JS to add this class to the .dropdown-content container when the user clicks on the dropdown button) */
+            .show {display:block;}
         </style>
 
     </head>
     <body>
         <!-- create an SVG canvas for us to modify -->
-        <!-- <svg id="geomap" width="1200" height="800"></svg> -->
-
+        <svg id="geomap" width="1200" height="800"></svg>
+        <div class="dropdown">
+            <button onclick="myFunction()" class="dropbtn">Dropdown</button>
+            <div id="myDropdown" class="dropdown-content">
+                <a href="#">Link 1</a>
+                <a href="#">Link 2</a>
+                <a href="#">Link 3</a>
+            </div>
+        </div>
         <script>
+            /* When the user clicks on the button,
+            toggle between hiding and showing the dropdown content */
+            function myFunction() {
+                document.getElementById("myDropdown").classList.toggle("show");
+            }
 
-            var width = 800,
-                height = 700;
-
-            Promise.all([
-                d3.json("./Boundaries_District.json"),
-                d3.csv("./incidents_part1_part2.csv")
-            ]).then((data) =>{
-                console.log(data);
-                const topology = data[0];
-                const crime = data[1];
-                console.log(topology);
-
-
-            var projection = d3.geoMercator()
-                .center([-75.12, 40.05])
-                .scale(100000);
-
-            var path = d3.geoPath()
-                .projection(projection);
-
-            // var path2 = d3.geo.path()
-            //     .projection(projection);
-
-            var svg = d3.select("body").append("svg")
-                .attr("width", width)
-                .attr("height", height);
-
-            var neighborhoodText = svg.append("text")
-                .attr("y", height / 8)
-                .attr("text-anchor", "left");
-
-            var districtText = svg.append("text")
-                .attr("y", height / 10)
-                .attr("text-anchor", "left");
-                
-            svg.selectAll("path")
-                .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
-                .enter().append("path")
-                .attr("class", "districts")
-                .attr("id", function (d) {return d.properties.DIST_NUM;})
-                .attr("d", path)
-                .on("mouseover", function () {
-                    d3.select(this).style("stroke", "red");
-                    // d3.select(this).style("fill", "white");
-                    d3.select(this).style("stroke-width", "2px");
-                    districtText.text("District: " + this.id);
-                })
-                .on("mouseout", function () {
-                    d3.select(this).style("stroke", "black");
-                    d3.select(this).style("fill", "#aaa");
-                    d3.select(this).style("stroke-width", ".75px");
-                    districtText.text("");
-                })
-
-                svg.append("g")
-                    .selectAll("circle")
-                    .data(crime)
-                    .join("circle")
-                    .attr("d", path)
-                    .attr("fill", "red")
-                    .attr("stroke", (d) => {
-                        var color;
-                        if (d.ucr_general === 600) {
-                            color = "red";
-                        } else {
-                            color = "green";
-                        }
-
-                        return color;
-                    })
-                    .attr("r", "2px")
-                    .attr("cx", (d) => { return projection([d.lng, d.lat])[0] })
-                    .attr("cy", (d) => { return projection([d.lng, d.lat])[1] });
-
-
-            // d3.json("philadelphia.json", function (error, topology) {
-            //     svg.selectAll("path")
-            //         .data(topojson.object(topology, topology.objects.philadelphia).geometries)
-            //         .enter().append("path")
-            //         .attr("class", "neighborhoods")
-            //         .attr("id", function (d) { return d.properties.name; })
-            //         .attr("d", path)
-            //         .on("mouseover", function () {
-            //             d3.select(this).style("fill", "#ff0");
-            //             neighborhoodText.text("Neighborhood: " + this.id);
-            //         })
-            //         .on("mouseout", function () {
-            //             d3.select(this).style("fill", "#aaa");
-            //             neighborhoodText.text("");
-            //         });
-            // });
-
-            // d3.json("Boundaries_District.json", function (error, topology){
-            //     svg.selectAll("path")
-            //         .data(topojson.object(topology, topology.objects.Boundaries_District).geometries)
-            //         .enter().append("path")
-            //         .attr("class", "districts")
-            //         .attr("id", function (d) {return d.properties.DIST_NUM;})
-            //         .attr("d", path)
-            //         .on("mouseover", function () {
-            //             d3.select(this).style("stroke", "red");
-            //             // d3.select(this).style("fill", "white");
-            //             d3.select(this).style("stroke-width", "2px");
-            //             districtText.text("District: " + this.id);
-            //         })
-            //         .on("mouseout", function () {
-            //             d3.select(this).style("stroke", "black");
-            //             d3.select(this).style("fill", "#aaa");
-            //             d3.select(this).style("stroke-width", ".75px");
-            //             districtText.text("");
-            //         })
-            // });
-
-        }) 
+            // Close the dropdown menu if the user clicks outside of it
+            window.onclick = function(event) {
+            if (!event.target.matches('.dropbtn')) {
+                var dropdowns = document.getElementsByClassName("dropdown-content");
+                var i;
+                for (i = 0; i < dropdowns.length; i++) {
+                var openDropdown = dropdowns[i];
+                if (openDropdown.classList.contains('show')) {
+                    openDropdown.classList.remove('show');
+                }
+                }
+            }
+            }
         </script>
     </body>
 </html>
