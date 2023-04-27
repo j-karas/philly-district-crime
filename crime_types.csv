@@ -1,0 +1,28 @@
+﻿id,type
+,All Crimes
+600,Theft
+200,Rape
+300,Robbery
+500,Burglary
+400,Aggravated Assault
+700,Motor Vehicle Theft
+800,Other Assaults
+1100,Fraud
+1400,Vandalism/Criminal Mischief
+1500,Weapon Violations
+2600,All Other Offenses
+1300,Receiving Stolen Property
+2400,Disorderly Conduct
+2100,DUI
+1800,Narcotic / Drug Law Violations
+1000,Forgery and Counterfeiting
+1700,Other Sex Offenses (Not Commercialized)
+1600,Prostitution and Commercialized Vice
+100,Homicide - Criminal
+2300,Public Drunkenness
+2000,Offenses Against Family and Children
+1200,Embezzlement
+2200,Liquor Law Violations
+900,Arson
+1900,Gambling Violations
+2500,Vagrancy/Loitering
