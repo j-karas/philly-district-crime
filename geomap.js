@@ -67,7 +67,7 @@ var projection = d3.geoMercator()
 var path = d3.geoPath()
 .projection(projection);
 
-const svg = d3.select("#geomap").attr('transform', 'translate(50,50)')
+const svg = d3.select("#geomap").attr('transform', 'translate(300,50)')
 .attr("width", width)
 .attr("height", height);
 
