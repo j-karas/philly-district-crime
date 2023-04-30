@@ -16,23 +16,31 @@
         console.log(crimeTypes);
 
         
+        //NECESSARY STRUCTURE:
+        /*
+        [
+            {district_num: "1", crimes: [{type: 600, count: 100},{type: 400, count: 24},{type: 1000, count: 1}]},
+            {...},
+            ...
+        ]
+        */
 
         var crimePerDistrict = [];
         var districtObject = {};
         districts.forEach(district => {
             var obj = {}
             obj["district_num"] = district.DIST_NUMC;
-            districtObject[district.DIST_NUMC] = new Map();
+            districtObject[district.DIST_NUMC] = [];
             crimePerDistrict.push(obj);
         });
 
-        console.log(crimePerDistrict);
+        console.log(districtObject);
 
         var types = []
 
         crimeTypes.forEach(type => {
             if (type.id) {
-                types.push(type.type);
+                types.push(type.id);
             };
         });
 
@@ -45,11 +53,22 @@
 
 
         crime.forEach((crime) => {  // this is basically a for loop
-            if (!districtObject[crime.dc_dist].has(crime.ucr_general)) {
-                districtObject[crime.dc_dist].set(crime.ucr_general, 1);
+            const i = districtObject[crime.dc_dist].findIndex(e => e.type === crime.ucr_general);
+            if (i > -1) {
+                /* districtObject contains the element we're looking for, at index "i" */
+                districtObject[crime.dc_dist][i].count +=1;
             } else {
-                districtObject[crime.dc_dist].set(crime.ucr_general, districtObject[crime.dc_dist].get(crime.ucr_general) + 1);
+                //create that element and append it to our list of objects.
+                tempObj = {"type": crime.ucr_general, "count": 1};
+                districtObject[crime.dc_dist].push(tempObj);
             }
+
+
+            // if (!districtObject[crime.dc_dist].has(crime.ucr_general)) {
+            //     districtObject[crime.dc_dist].set(crime.ucr_general, 1);
+            // } else {
+            //     districtObject[crime.dc_dist].set(crime.ucr_general, districtObject[crime.dc_dist].get(crime.ucr_general) + 1);
+            // }
         })
         
         crimePerDistrict.forEach(obj => {
@@ -90,12 +109,12 @@
             .call(d3.axisBottom(x).tickSize(3));
 
         svg.selectAll("myRect")
-            .data(crimePerDistrict)
+            .data(crimePerDistrict[0].crimes)
             .enter()
             .append("rect")
             .attr("x", x(0))
-            .attr("y", function (d) {console.log("Test");console.log(d.crimes.keys()); return y(d.crimes.keys()); })
-            .attr("width", function (d) { return x(d.crimes.values); })
+            .attr("y", function (d) {console.log(d); return y(d.count); })
+            .attr("width", function (d) { return x(d.type); })
             .attr("height", y.bandwidth())
             .attr("fill", "#69b3a2")
 
