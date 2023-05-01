@@ -125,7 +125,7 @@
             x.domain([0, d3.max(data, (d) => {return (d.count)})])
             xAxis.transition().duration(1000).call(d3.axisBottom(x).tickSize(3))
 
-            var u = svg.selectAll("myRect")
+            var u = svg.selectAll("rect")
                 .data(data)
                 u
                 .enter()
