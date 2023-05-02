@@ -177,8 +177,8 @@
 
         }
 
-        createBargraph("#selectButton2", "#bargraph", "#69b3a2", 500 ,800);
-        createBargraph("#selectButton3", "#bargraph2", "#69b444", 500, 800);
+        createBargraph("#selectButton2", "#bargraph", "#1b9e77", 500 ,800);
+        createBargraph("#selectButton3", "#bargraph2", "#d95f02", 500, 800);
 
     })
 
