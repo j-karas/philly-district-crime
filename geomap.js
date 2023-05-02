@@ -48,18 +48,6 @@ crime.forEach((crime) => {  // this is basically a for loop
     }
 })  
 
-console.log(crimeDictionary);
-
-var colors = d3.scaleOrdinal()
-.domain(crimeDictionary.keys())
-.range(['#FF6633', '#FFB399', '#FF33FF', '#FFFF99', '#00B3E6',
-        '#E6B333', '#3366E6', '#999966', '#99FF99', '#B34D4D',
-        '#80B300', '#809900', '#E6B3B3', '#6680B3', '#66991A',
-        '#FF99E6', '#CCFF1A', '#FF1A66', '#E6331A', '#33FFCC',
-        '#66994D', '#B366CC', '#4D8000', '#B33300', '#CC80CC',
-        '#66664D'])
-
-
 var projection = d3.geoMercator()
 .center([-75.12, 40.05])
 .scale(100000);
@@ -71,12 +59,10 @@ const svg = d3.select("#geomap").attr('transform', 'translate(300,50)')
 .attr("width", width)
 .attr("height", height);
 
-var neighborhoodText = svg.append("text")
-.attr("y", height / 8)
-.attr("text-anchor", "left");
 
 var districtText = svg.append("text")
 .attr("y", height / 10)
+.attr("class", "district")
 .attr("text-anchor", "left");
 
 svg.selectAll("path")
@@ -86,14 +72,12 @@ svg.selectAll("path")
 .attr("id", function (d) {return d.properties.DIST_NUM;})
 .attr("d", path)
 .on("mouseover", function () {
-    d3.select(this).style("stroke", "red");
-    // d3.select(this).style("fill", "white");
-    d3.select(this).style("stroke-width", "2px");
+    d3.select(this).style("fill", "yellow");
     districtText.text("District: " + this.id);
 })
 .on("mouseout", function () {
     d3.select(this).style("stroke", "black");
-    d3.select(this).style("fill", "#aaa");
+    d3.select(this).style("fill", "rgb(196, 202, 199)");
     d3.select(this).style("stroke-width", ".75px");
     districtText.text("");
 })
@@ -113,12 +97,15 @@ function updateCircles(crime) {
         )
         .attr("class", (d) => { return d.ucr_general })
         .attr("d", path)
-        .attr("fill", (d) => {
-            return colors(d.ucr_general);
-        })
-        .attr("stroke", (d) => {
-            return colors(d.ucr_general);
-        })
+        // .attr("fill", (d) => {
+        //     return colors(d.ucr_general);
+        // })
+        // .attr("stroke", (d) => {
+        //     return colors(d.ucr_general);
+        // })
+        .attr("fill", "red")
+        .attr("stroke", "red")
+        .attr("opacity", .4)
         .attr("r", "1.5px")
         .attr("cx", (d) => { return projection([d.lng, d.lat])[0] })
         .attr("cy", (d) => { return projection([d.lng, d.lat])[1] });
@@ -137,5 +124,5 @@ d3.select("#selectButton").on("change", function(d) {
     updateCrime(selectedOption)
 })
 
-updateCrime();
+updateCrime("600");
 });

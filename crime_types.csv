@@ -1,5 +1,4 @@
 ﻿id,type
-,All Crimes
 600,Theft
 200,Rape
 300,Robbery
@@ -14,10 +13,10 @@
 1300,Receiving Stolen Property
 2400,Disorderly Conduct
 2100,DUI
-1800,Narcotic / Drug Law Violations
+1800,Narcotic/Drug Law Violations
 1000,Forgery and Counterfeiting
-1700,Other Sex Offenses (Not Commercialized)
-1600,Prostitution and Commercialized Vice
+1700,Other Sex Offenses
+1600,Prostitution/Commercialized Vice
 100,Homicide - Criminal
 2300,Public Drunkenness
 2000,Offenses Against Family and Children
