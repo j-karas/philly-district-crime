@@ -16,7 +16,7 @@
         <!-- <script src="./geomap.js"></script> -->
         <style>
             path {
-                fill: #aaa;
+                fill: rgb(196, 202, 199);
                 stroke: black;
                 stroke-width: .75px;
                 pointer-events: all;
@@ -24,8 +24,15 @@
         
             text {
                 font-family: sans-serif;
-                font-size: 25px;
-                color: #aaa;
+                font-size: 15px;
+                color: rgb(53, 53, 54);
+            }
+
+            .district {
+                font-feature-settings: sans-serif;
+                font-size:25px;
+                color: black;
+                text-decoration:solid;
             }
         </style>
 
@@ -40,9 +47,20 @@
         <div style="margin: auto; width:50%">
             Select a District:
             <select id="selectButton2"></select>
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            &nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp
+            Select a District:
+            <select id="selectButton3"></select>
         </div>
         <div style="display:flex; flex-direction: row;">
         <svg id="bargraph"></svg>
+        <svg id="bargraph2"></svg>
         <div id="tooltip"></div>
         </div>
     </body>
